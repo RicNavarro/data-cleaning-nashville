@@ -1,6 +1,6 @@
 ## Projeto de Limpeza de Dados Imobiliários de Nashville
 
-![Dono de uma casa](https://img.freepik.com/fotos-gratis/foto-aproximada-de-uma-pessoa-pensando-em-comprar-ou-vender-uma-casa_181624-24928.jpg?t=st=1713538240~exp=1713541840~hmac=e928b23c92989182c685e6954cadb3b4f9cd7d0ef0a0a15778f177e48765442d&w=996)
+![Dono de uma casa](https://br.freepik.com/fotos-gratis/mao-apresentando-modelo-de-casa-para-campanha-de-emprestimo_15667726.htm#fromView=search&page=1&position=21&uuid=ba3a0332-6e23-4000-bc2f-9d0798cf23e3)
 #### 📜 Descrição do projeto 
 
 O projeto envolve realizar a limpeza de um conjunto de dados relacionado ao mercado imobiliário em Nashville, Texas, EUA.
