@@ -83,11 +83,77 @@ WHERE a.PropertyAddress IS Null
 
 -----------------------------------------------------------------
 
--- Divivindo o campo de endereço (PropertyAddress) em colunas individuais (Address, City, State)
+--		Divivindo o campo de endereço (PropertyAddress) em colunas individuais (Address, City, State)
+
+-- Observamos como PropertyAddress têm toda a informação de endereço em
+-- apenas um campo.
+Select PropertyAddress
+From PortifolioProject..NashvilleHousing
+
+-- Aqui estamos selecionando especificamente uma substring de PropretyAddress
+-- que começa no primeiro caracter e vai até a posição anterior (-1) da primeira
+-- vírgula de PropertyAddress.
+Select
+SUBSTRING(PropertyAddress, 1, CHARINDEX(',', PropertyAddress) - 1) as Address
+From PortifolioProject..NashvilleHousing
+
+-- Agora estamos selecionando a substring contento tudo imediateamente após a vírgula (+1),
+-- até o final do campo(que estamos medidndo pelo tamanho do contéudo naquela entrada
+Select
+SUBSTRING(PropertyAddress, CHARINDEX(',',PropertyAddress) + 1, LEN(PropertyAddress)) as Address
+From PortifolioProject..NashvilleHousing
+
+-- Inserindo as duas novas colunas, contendo o endereço e a cidade divididos em
+-- dois campos diferentes
+ALTER TABLE PortifolioProject..NashvilleHousing
+Add PropertySplitAddress Nvarchar(255);
+
+ALTER TABLE PortifolioProject..NashvilleHousing
+Add PropertySplitCity Nvarchar(255);
+
+-- Atualizando as colunas com os resultados que observamos nas substrings que
+-- mencionamos anteriormente
+UPDATE NashvilleHousing
+SET PropertySplitAddress = SUBSTRING(PropertyAddress, 1, CHARINDEX(',', PropertyAddress) - 1)
+
+UPDATE NashvilleHousing
+SET PropertySplitCity = SUBSTRING(PropertyAddress, CHARINDEX(',',PropertyAddress) + 1, LEN(PropertyAddress))
+
+-- Antes de avançar, vamos fazer o mesmo com o OwnerAddress.
+-- Vamos usar ParseName ao invés de Substrings
+
+-- PARSENAME procura por .s não por ,s então temos de usar REPLACE para substituir
+-- um pelo outro antes de realizar o comando. ParseName começa do final do texto.
+-- Logo o ParseName de OwnerAddress com o argumento 1 retorna a última string depois
+-- de um ponto(ou uma vírgula no era nosso caso), o argumeto 2 retorna a penúltima, etc.
+
+Select
+ParseName(REPLACE(OwnerAddress, ',', '.'), 3), -- Endereço
+ParseName(REPLACE(OwnerAddress, ',', '.'), 2), -- Cidade
+ParseName(REPLACE(OwnerAddress, ',', '.'), 1) -- Estado
+From PortifolioProject..NashvilleHousing
 
 
+-- Adicionando os campos respectivos para o endereço, cidade e estado em OwnerAddress
+ALTER TABLE PortifolioProject..NashvilleHousing
+Add OwnerSplitAddress Nvarchar(255);
 
+ALTER TABLE PortifolioProject..NashvilleHousing
+Add OwnerSplitCity Nvarchar(255);
 
+ALTER TABLE PortifolioProject..NashvilleHousing
+Add OwnerSplitState Nvarchar(255);
+
+-- Populando cada um desses com as entradas que vimos na seção de ParseName acima
+
+UPDATE NashvilleHousing
+SET OwnerSplitAddress = ParseName(REPLACE(OwnerAddress, ',', '.'), 3)
+
+UPDATE NashvilleHousing
+SET OwnerSplitCity = ParseName(REPLACE(OwnerAddress, ',', '.'), 2)
+
+UPDATE NashvilleHousing
+SET OwnerSplitState = ParseName(REPLACE(OwnerAddress, ',', '.'), 1)
 
 
 -----------------------------------------------------------------
