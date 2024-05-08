@@ -225,12 +225,14 @@ Where row_num > 1
 
 -----------------------------------------------------------------
 
--- Deletar colunas não usadas
+--		Deletar colunas não usadas
 
+-- A melhor prática seria fazer essas remoções em uma View, não nos dados
+-- importados diretamente. Mais uma vez, vamos priorizar a experimentação às
+-- boas práticas
 
-
-
-
+-- Removeremos todas as colunas que são redundantes ou desnecessárias
+ALTER TABLE PortifolioProject..NashvilleHousing
+DROP COLUMN PropertyAddress, OwnerAddress, TaxDistrict, SoldAsVacant
 
 -----------------------------------------------------------------
-
