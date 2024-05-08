@@ -186,9 +186,41 @@ SET SoldAsVacantYN =
 
 -- Remover duplicatas
 
+-- Enquanto não é padrão se remover esses dados duplicados por via de SQL
+-- estaremos realizando isso para praticar
 
+-- Vamos usar RowNumber, mas existem opções como Rank
+-- Poderíamos comparar o campo UniqueID, mas vamos observar outros como
+-- ParcelID SaleDate, LegalReference, em suma campos que se forem todos
+-- iguais indicam uma duplicata, mesmo que UniqueID indique que são 2 distintos
 
+-- Ler *** antes de +++
 
+-- +++
+-- Criamos uma CTE para manipulação mais fácil dessa tabela do jeito que a query foi feita
+-- Fazemos então uma seleção para ver onde row_num > 1, vendo quais entradas são duplicatas
+-- Usando Delete, removemos todas as duplicatas
+With RowNumCTE as(
+-- ***
+-- O partition by está dividindo as consultas em agrupamentos conforme cada um
+-- dos critérios distintos. O Row_Number() precedendo o over, vai dar um número único
+-- para cada linha onde estes elementos por onde estiver se particionando forem iguais
+Select *,
+ROW_NUMBER() OVER(
+Partition By	ParcelID,
+				PropertyAddress,
+				SalePrice,
+				SaleDate,
+				LegalReference
+				ORDER BY
+				UniqueID
+				) row_num
+
+From PortifolioProject..NashvilleHousing
+)
+DELETE
+From RowNumCTE
+Where row_num > 1
 
 
 -----------------------------------------------------------------
