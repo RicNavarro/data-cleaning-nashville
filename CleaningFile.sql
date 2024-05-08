@@ -158,12 +158,29 @@ SET OwnerSplitState = ParseName(REPLACE(OwnerAddress, ',', '.'), 1)
 
 -----------------------------------------------------------------
 
--- Mudar o Y e N no campo "SoldAsVacant" para Yes e No
+--		 Mudar o Y e N no campo "SoldAsVacant" para Yes e No
+
+-- Grande parte do problema que o tutorial de "Alex the Analyst" teve
+-- ao importar essa tabela foi resolvido simplesmente ao importar essa coluna como boolean
+-- Os 'N's e 'No's viraram '0' e os 'Y's e 'Yes's viraram '1'. Logo estes campos já foram unidos
+
+Select Distinct(SoldAsVacant), Count(SoldAsVacant)
+From PortifolioProject..NashvilleHousing
+Group by SoldAsVacant
+Order by SoldAsVacant
 
 
+-- Uma nova coluna para os campos com Yes e No é criada
+ALTER TABLE NashvilleHousing
+ADD SoldAsVacantYN Nvarchar(3)
 
-
-
+-- CASE WHEN para verificar o conteúdo presente em cada entrada e 
+-- substituir conforme apropriado.
+UPDATE NashvilleHousing
+SET SoldAsVacantYN =
+	CASE when SoldAsVacant = '0' THEN 'No'
+		 when SoldAsVacant = '1' THEN 'Yes'
+	END
 
 -----------------------------------------------------------------
 
